@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rahma AI Guardian App - Architecture and Implementation Plan</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6b7a;
+      --line: #d7dde5;
+      --soft: #f6f8fb;
+      --brand: #0f766e;
+      --brand-dark: #115e59;
+      --accent: #b45309;
+      --paper: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      background: var(--paper);
+      min-height: 100vh;
+      box-shadow: 0 20px 70px rgba(15, 23, 42, 0.12);
+    }
+
+    header {
+      padding: 48px 56px 32px;
+      background: linear-gradient(135deg, #f8fbfb 0%, #e8f5f3 58%, #fff7ed 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--brand-dark);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.12;
+      letter-spacing: 0;
+      max-width: 860px;
+    }
+
+    .subtitle {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 850px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .pill {
+      border: 1px solid rgba(15, 118, 110, 0.22);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--brand-dark);
+      padding: 8px 11px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 36px 56px 64px;
+    }
+
+    section {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    section:last-child {
+      border-bottom: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 25px;
+      line-height: 1.2;
+      letter-spacing: 0;
+      color: #111827;
+    }
+
+    h3 {
+      margin: 24px 0 10px;
+      font-size: 18px;
+      letter-spacing: 0;
+      color: var(--brand-dark);
+    }
+
+    p {
+      margin: 0 0 14px;
+      max-width: 930px;
+    }
+
+    ul, ol {
+      margin: 8px 0 16px 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0 8px;
+    }
+
+    .summary-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--soft);
+    }
+
+    .summary-item strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--brand-dark);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7f6;
+      color: #0f3f3b;
+    }
+
+    .diagram {
+      margin: 18px 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow-x: auto;
+    }
+
+    .mermaid {
+      background: #ffffff !important;
+      min-width: 720px;
+    }
+
+    .callout {
+      border-left: 4px solid var(--brand);
+      background: #f1faf8;
+      padding: 14px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .warning {
+      border-left-color: var(--accent);
+      background: #fff7ed;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .page {
+        box-shadow: none;
+        max-width: none;
+      }
+
+      section {
+        break-inside: avoid;
+      }
+
+      .diagram {
+        break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 760px) {
+      header, main {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+
+      h1 {
+        font-size: 31px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="eyebrow">Client Review Document</p>
+      <h1>Rahma AI Guardian App Architecture and Implementation Plan</h1>
+      <p class="subtitle">A practical Phase 1 and Phase 2 delivery plan covering system architecture, data flow, UX flow, server architecture, open technical options, recommended decisions, and launch readiness.</p>
+      <div class="meta">
+        <span class="pill">Prepared: 22 May 2026</span>
+        <span class="pill">Phase 1: Elderly and special-care pilot</span>
+        <span class="pill">Phase 2: Children, geofencing, pharmacy, languages</span>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>1. Executive Summary</h2>
+        <p>Rahma is planned as a one-touch emergency and care-assistance platform for vulnerable users. Phase 1 should prove the emergency-care foundation for elderly and special-care users. Phase 2 should expand the platform into children, geofencing, pharmacy communication, broader language support, and selected wearable integration.</p>
+        <div class="summary-grid">
+          <div class="summary-item"><strong>Recommended build model</strong>Native iOS and Android apps, reusable backend services, receiver dashboard, and client-approved UAE-hosted infrastructure.</div>
+          <div class="summary-item"><strong>Recommended hosting</strong>AWS UAE Region with Bedrock if accepted by the client. Custom on-premises hosting should be treated as a separate proposal.</div>
+          <div class="summary-item"><strong>Recommended AI posture</strong>AI supports language and intent context. The one-touch activation itself starts the safety workflow.</div>
+        </div>
+        <div class="callout">
+          We will meet any compliance, audit, data handling, or security requirement specifically confirmed by the client or authority stakeholders. Until those requirements are formally shared, the architecture will keep controls configurable and evidence-ready.
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Confirmed Scope</h2>
+        <h3>Phase 1: Elderly and Special-Care Emergency Pilot</h3>
+        <ul>
+          <li>One-touch emergency activation with press-and-hold protection.</li>
+          <li>Voice and visual yes/no interaction running in parallel.</li>
+          <li>Arabic and English support.</li>
+          <li>Emergency event creation with timestamp, location, profile summary, and status.</li>
+          <li>Caregiver/family notification through push and SMS fallback.</li>
+          <li>Receiver dashboard for authority/support/family users.</li>
+          <li>Hospital finder using an approved facility directory.</li>
+          <li>Medication reminders for the user.</li>
+          <li>Offline and weak-network fallback using local data, last known location, SMS, and later sync.</li>
+          <li>Audit trail for emergency events, receiver actions, notification status, and support handling.</li>
+        </ul>
+
+        <h3>Phase 2: Children, Geofencing, Pharmacy, Scale, and Languages</h3>
+        <ul>
+          <li>Child profile module with parent/guardian access.</li>
+          <li>School or authorized receiver workflows.</li>
+          <li>Safe-zone/geofencing setup and alerts.</li>
+          <li>Family member messaging and escalation.</li>
+          <li>Pharmacy communication for prescription/dosage supply workflows.</li>
+          <li>Medication reminder expansion with missed-dose escalation.</li>
+          <li>Multilingual expansion beyond Arabic and English.</li>
+          <li>Wearable integration as a controlled workstream, depending on selected devices and APIs.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>3. Recommended User Onboarding Flow</h2>
+        <p>Rahma onboarding should support verified identity while staying practical for elderly and special-care users. Our recommendation is UAE Pass as the primary route where approved, assisted onboarding as the elderly-friendly fallback, mobile OTP plus relationship approval for caregivers, and client SSO for staff/dashboard users.</p>
+        <table>
+          <thead>
+            <tr><th>Option</th><th>Best fit</th><th>Recommendation</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>UAE Pass</td><td>Verified identity for eligible Phase 1 users.</td><td>Recommended primary route if client confirms access and suitability.</td></tr>
+            <tr><td>Assisted onboarding</td><td>Elderly or special-care users who need staff/caregiver help.</td><td>Recommended fallback for the controlled pilot.</td></tr>
+            <tr><td>Mobile OTP</td><td>Caregivers and family members.</td><td>Use with relationship approval; not enough alone for patient identity.</td></tr>
+            <tr><td>Client/staff SSO</td><td>Admins, support teams, and receiver-dashboard users.</td><td>Recommended for staff and operational access.</td></tr>
+            <tr><td>Social login</td><td>Low-risk convenience flows.</td><td>Not recommended for Phase 1 patient, caregiver, or emergency access.</td></tr>
+          </tbody>
+        </table>
+        <h3>Recommended Phase 1 Onboarding Steps</h3>
+        <ol>
+          <li>Pilot invite or staff-assisted registration starts the process.</li>
+          <li>User chooses UAE Pass, assisted onboarding, or approved manual pilot setup.</li>
+          <li>Identity is verified and a Rahma user reference is created.</li>
+          <li>Minimal emergency profile is completed: language, medical flags, allergies, caregiver contacts, and medication reminders.</li>
+          <li>Caregivers receive invite and verify by OTP plus relationship approval.</li>
+          <li>App performs permission health check for location, notifications, microphone, and SMS fallback.</li>
+          <li>User completes a guided emergency test in training mode.</li>
+          <li>Account becomes pilot-ready only after profile, caregiver, permissions, and test status are complete.</li>
+        </ol>
+        <div class="diagram">
+          <pre class="mermaid">
+flowchart TD
+  A["Pilot invite or assisted registration"] --> B{"Onboarding path"}
+  B -- "Verified user" --> C["UAE Pass authentication"]
+  B -- "Needs help" --> D["Assisted onboarding by approved staff"]
+  B -- "Caregiver" --> E["Mobile OTP + relationship approval"]
+  B -- "Staff / receiver" --> F["Client SSO + role mapping"]
+  C --> G["Create Rahma user reference"]
+  D --> G
+  E --> H["Link caregiver to user"]
+  F --> I["Dashboard access approved"]
+  G --> J["Emergency profile"]
+  J --> K["Caregiver invite and verification"]
+  K --> L["Permission health check"]
+  L --> M["Training-mode emergency test"]
+  M --> N["Pilot-ready account"]
+          </pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Recommended High-Level Architecture</h2>
+        <p>Rahma should be implemented as a secure mobile-first platform with five layers: native mobile apps, receiver interfaces, backend platform services, AI/voice services, and integration adapters.</p>
+        <div class="diagram">
+          <pre class="mermaid">
+flowchart TB
+  subgraph Mobile["Native Mobile Apps"]
+    UserApp["User App<br/>One-touch button<br/>Voice + visual prompts<br/>Offline fallback"]
+    LocalStore["Encrypted Local Store<br/>Minimal profile<br/>Caregiver contacts<br/>Last known location<br/>Queued events"]
+    OnDeviceAI["On-device Voice / Intent<br/>Simple commands<br/>Yes/No<br/>Offline prompts"]
+  end
+
+  subgraph Access["Access Channels"]
+    CaregiverApp["Caregiver View<br/>Alerts + live link"]
+    ReceiverWeb["Receiver Dashboard<br/>Support / authority / family"]
+    AdminWeb["Admin Console<br/>Pilot monitoring<br/>Configuration"]
+  end
+
+  subgraph Backend["Client-approved UAE-hosted Backend"]
+    APIGW["API Gateway"]
+    Auth["Identity + Role Service"]
+    Profile["Profile + Consent Service"]
+    Emergency["Emergency Event Service"]
+    Location["Location Service"]
+    Notify["Notification Service"]
+    Reminder["Medication Reminder Service"]
+    Hospital["Hospital Directory Service"]
+    Audit["Audit + Event Log"]
+    AIOrch["AI Orchestration Service"]
+    Integration["Integration Adapter Layer"]
+  end
+
+  subgraph Data["Data Layer"]
+    DB["Encrypted Operational Database"]
+    Queue["Event Queue"]
+    ObjectStore["Controlled File / Report Storage"]
+    Metrics["Monitoring + Dashboards"]
+  end
+
+  subgraph External["Approved External / Partner Systems"]
+    SMS["SMS Provider"]
+    Push["Apple / Google Push"]
+    Maps["Maps / Geocoding"]
+    EmergencyPartner["Emergency / Authority Handoff"]
+    HospitalPartner["Hospital Directory / Facility Data"]
+    Pharmacy["Phase 2 Pharmacy Systems"]
+    School["Phase 2 School Systems"]
+    Wearables["Phase 2 Wearables"]
+  end
+
+  UserApp --> LocalStore
+  UserApp --> OnDeviceAI
+  UserApp --> APIGW
+  CaregiverApp --> APIGW
+  ReceiverWeb --> APIGW
+  AdminWeb --> APIGW
+  APIGW --> Auth
+  APIGW --> Profile
+  APIGW --> Emergency
+  Emergency --> Location
+  Emergency --> Notify
+  Emergency --> Audit
+  Emergency --> AIOrch
+  Notify --> SMS
+  Notify --> Push
+  Location --> Maps
+  Hospital --> HospitalPartner
+  Integration --> EmergencyPartner
+  Integration --> Pharmacy
+  Integration --> School
+  Integration --> Wearables
+  Profile --> DB
+  Emergency --> DB
+  Location --> DB
+  Notify --> Queue
+  Audit --> ObjectStore
+  Audit --> Metrics
+          </pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. How the App Works: Activation to Emergency Handoff</h2>
+        <p>Rahma should be explainable to the client as a simple emergency workflow. The user presses and holds the main Rahma button for 2 seconds, the app starts the emergency workflow, captures location and minimal profile context, alerts caregivers/receivers, and then dispatches or hands off through the approved route.</p>
+        <ol>
+          <li><strong>Activate Rahma:</strong> User presses and holds the main button for 2 seconds.</li>
+          <li><strong>Confirm context:</strong> App asks one simple voice/visual prompt such as Are you hurt? or Do you need help?</li>
+          <li><strong>Capture location and profile:</strong> App captures GPS/network location or falls back to last-known location with timestamp and confidence.</li>
+          <li><strong>Create emergency event:</strong> Backend creates a timestamped emergency event with activation source, user reference, location quality, and workflow status.</li>
+          <li><strong>Alert caregivers and receivers:</strong> Push/SMS alerts and dashboard events start immediately, with a normal-connectivity target of under 10 seconds.</li>
+          <li><strong>Dispatch or handoff:</strong> If a direct approved authority API exists, the emergency packet is sent through that route. If not, Phase 1 uses receiver dashboard, call-center/manual handoff, or simulator.</li>
+          <li><strong>Track and close:</strong> Receivers acknowledge, escalate, mark false alarm, or close the event. Every action is audited.</li>
+        </ol>
+        <div class="callout">
+          Recommended authority dispatch position: do not make Phase 1 launch dependent on live authority dispatch unless the integration is already approved, documented, and testable. Build the emergency packet and receiver dashboard first, support manual/call-center handoff or simulator during pilot validation, then switch to direct authority dispatch once the client confirms the approved route.
+        </div>
+      </section>
+
+      <section>
+        <h2>6. Phase 1 Emergency Flow</h2>
+        <p>The Phase 1 flow must be usable by an elderly or special-care user during distress. No typing or menu navigation should be required.</p>
+        <div class="diagram">
+          <pre class="mermaid">
+sequenceDiagram
+  autonumber
+  actor User as Elderly / Special-care User
+  participant App as Rahma Mobile App
+  participant Local as Local Encrypted Store
+  participant API as Backend API
+  participant AI as AI / Intent Layer
+  participant Notify as Notification Service
+  participant Receiver as Receiver Dashboard
+  participant Caregiver as Caregiver / Family
+  participant Handoff as Emergency / Authority Handoff
+  participant Audit as Audit Log
+
+  User->>App: Press and hold Rahma button
+  App->>Local: Read minimal profile and last known location
+  App->>App: Capture current GPS/network location if available
+  App->>API: Create emergency event
+  API->>AI: Process voice/context if available
+  AI-->>API: Intent + confidence + language
+  API->>Notify: Send caregiver/receiver alerts
+  Notify-->>Caregiver: Push/SMS with secure live link
+  API->>Receiver: Show event on dashboard
+  API->>Handoff: Send approved emergency packet or manual handoff
+  API->>Audit: Store timeline, status, decisions, delivery results
+  Receiver-->>API: Update event status / close false alarm / escalate
+  API->>Audit: Store receiver action
+          </pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>7. Help Must Start Even When the Internet Is Imperfect</h2>
+        <p>Offline mode should focus on the emergency-critical path and show exactly what happens when internet, GPS, push notifications, or authority APIs are unavailable.</p>
+        <div class="diagram">
+          <pre class="mermaid">
+flowchart TD
+  A["Activation succeeds: 2-second hold, silent panic, or future wearable trigger"] --> B["Create local emergency record: event ID, activation source, device time"]
+  B --> C["Load minimal encrypted profile: language, medical flags, allergies, caregivers"]
+  C --> D{"Location quality"}
+  D -- "Fresh GPS/network" --> E["Attach current coordinates, accuracy, timestamp"]
+  D -- "Delayed/unavailable" --> F["Attach last-known location, last area, timestamp, low confidence"]
+  E --> G{"Internet data available?"}
+  F --> G
+  G -- "Yes" --> H["Send event packet to backend: profile summary, location, device status"]
+  H --> I["Backend sends caregiver push/SMS and receiver dashboard alert"]
+  I --> J{"Approved authority route live?"}
+  J -- "Yes" --> K["Send emergency packet through approved API/handoff route"]
+  J -- "No / pending" --> L["Use receiver dashboard, call-center manual handoff, or simulator"]
+  G -- "No" --> M["Build SMS-safe payload: user ref, emergency status, location text"]
+  M --> N["Send SMS to approved caregivers and approved handoff number if configured"]
+  N --> O["Show offline reassurance: help is being contacted"]
+  O --> P["Queue encrypted event locally: alerts, retries, diagnostics"]
+  P --> R{"Connection restored?"}
+  R -- "Yes" --> S["Sync event timeline, delivery results, location confidence"]
+  R -- "No" --> T["Continue local retry policy and preserve audit trail"]
+  K --> U["Audit timeline updated"]
+  L --> U
+  S --> U
+          </pre>
+        </div>
+        <div class="warning callout">
+          Full offline medical triage is not recommended for Phase 1. The offline model should support simple commands, language handling, and yes/no prompts while the button activation starts the emergency workflow.
+        </div>
+      </section>
+
+      <section>
+        <h2>8. User Experience Flow</h2>
+        <div class="diagram">
+          <pre class="mermaid">
+flowchart LR
+  A["Home screen<br/>Large Rahma button"] --> B["Press and hold<br/>2 seconds"]
+  B --> C["Activation screen<br/>Vibration + sound + visual confirmation"]
+  C --> D{"User can respond?"}
+  D -- Voice --> E["Simple prompt<br/>Are you hurt? Need medicine? Lost?"]
+  D -- Tap --> F["Large Yes / No / Need Help buttons"]
+  D -- No response --> G["Escalate safely"]
+  E --> H["Add context to emergency event"]
+  F --> H
+  G --> H
+  H --> I["Caregiver + receiver alerts"]
+  I --> J["Status shown<br/>Help is being contacted"]
+  J --> K["Cancel false alarm<br/>short timed window if allowed"]
+          </pre>
+        </div>
+        <ul>
+          <li>One primary action on the home screen.</li>
+          <li>Voice and visual buttons available at the same time.</li>
+          <li>Haptic and audio feedback for reassurance.</li>
+          <li>Large text, high contrast, simple Arabic/English language.</li>
+          <li>Clear status after activation.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>9. Recommended Server Architecture</h2>
+        <h3>Preferred Option: AWS UAE Region with Bedrock</h3>
+        <p>This is the recommended option from our side if accepted by the client. It is faster for Phase 1, easier to operate, and better suited for scaling into Phase 2 than building a custom GPU environment from day one. Exact model and feature availability should be confirmed in the selected region during kickoff.</p>
+        <div class="diagram">
+          <pre class="mermaid">
+flowchart TB
+  subgraph UAECloud["AWS UAE Region - Recommended"]
+    WAF["WAF / Edge Protection"]
+    APIGW["API Gateway"]
+    VPC["Private VPC"]
+    ECS["Container Services"]
+    Lambda["Serverless Workers"]
+    RDS["Encrypted Relational DB"]
+    Redis["Cache"]
+    SQS["Queues"]
+    S3["Encrypted Object Storage"]
+    KMS["Key Management"]
+    CW["Monitoring / Logs"]
+    Bedrock["Bedrock / Managed AI"]
+  end
+
+  Mobile["iOS / Android Apps"] --> WAF
+  Dash["Dashboards"] --> WAF
+  WAF --> APIGW
+  APIGW --> VPC
+  VPC --> ECS
+  VPC --> Lambda
+  ECS --> RDS
+  ECS --> Redis
+  ECS --> SQS
+  Lambda --> SQS
+  ECS --> S3
+  RDS --> KMS
+  S3 --> KMS
+  ECS --> Bedrock
+  ECS --> CW
+          </pre>
+        </div>
+        <h3>Alternative: Custom On-Premises / Dedicated GPU Server</h3>
+        <p>Use this only if the client requires a fully dedicated environment. It provides maximum infrastructure control but increases cost, procurement time, MLOps effort, security maintenance, and delivery risk.</p>
+        <h3>Alternative: Hybrid</h3>
+        <p>Use managed cloud for app services and a private AI server for selected sensitive model workloads. This can balance speed and control, but it adds integration complexity.</p>
+      </section>
+
+      <section>
+        <h2>10. Open Decisions and Recommended Options</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Topic</th>
+              <th>Options</th>
+              <th>Recommended by us</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Mobile technology</td><td>Native iOS/Android, Flutter, React Native</td><td>Native iOS and Android for stronger device, location, SMS, background, and wearable control.</td></tr>
+            <tr><td>Hosting</td><td>AWS UAE Region + Bedrock, custom on-prem, hybrid</td><td>AWS UAE Region + Bedrock unless the client mandates dedicated hosting.</td></tr>
+            <tr><td>AI model usage</td><td>Managed private AI, self-hosted model, public AI API</td><td>Managed private AI in approved hosting. Public AI only for non-sensitive prototypes if formally approved.</td></tr>
+            <tr><td>Offline voice</td><td>Lightweight on-device model, rules-only prompts, full offline AI triage</td><td>Lightweight on-device model for simple commands and yes/no; no full offline medical triage in Phase 1.</td></tr>
+            <tr><td>Emergency integration</td><td>Direct approved API, gateway/call-center, simulator/manual pilot</td><td>Use approved API if available; keep simulator/manual handoff ready so pilot is not blocked.</td></tr>
+            <tr><td>Onboarding</td><td>UAE Pass, mobile OTP, client SSO, assisted onboarding</td><td>UAE Pass if client confirms access; OTP/assisted verification as fallback.</td></tr>
+            <tr><td>Medication reminders</td><td>App reminders, caregiver escalation, pharmacy-connected reminders</td><td>Phase 1 app reminders with optional caregiver escalation; Phase 2 pharmacy connection.</td></tr>
+            <tr><td>Wearables</td><td>Defer, Phase 2 proof, full launch support</td><td>Phase 2 controlled proof after selected devices and APIs are confirmed.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>11. Phase 1 Implementation Plan</h2>
+        <p>Recommended duration: 16 weeks, assuming client approvals, hosting access, and integration inputs are available on time.</p>
+        <table>
+          <thead>
+            <tr><th>Period</th><th>Focus</th><th>Key outputs</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Weeks 1-2</td><td>Discovery and scope lock</td><td>Final scope, hosting decision, onboarding decision, emergency handoff path, UX wireframes, risk register.</td></tr>
+            <tr><td>Weeks 3-6</td><td>Core app and backend MVP</td><td>Native app MVP, profile service, emergency service, caregiver flow, notifications, hospital directory, dashboard MVP.</td></tr>
+            <tr><td>Weeks 7-9</td><td>Offline and emergency reliability</td><td>SMS fallback, local queue, last-known location, receiver lifecycle, false alarm handling, poor-connectivity tests.</td></tr>
+            <tr><td>Weeks 10-12</td><td>AI, security, and script validation</td><td>Arabic/English prompts, intent confidence policy, approved scripts, access tests, audit review, support runbook.</td></tr>
+            <tr><td>Weeks 13-16</td><td>Pilot readiness and launch</td><td>Production deployment, pilot onboarding, dashboards, incident process, support training, Phase 2 backlog.</td></tr>
+          </tbody>
+        </table>
+        <div class="diagram">
+          <pre class="mermaid">
+gantt
+  title Phase 1 Delivery Timeline - 16 Weeks
+  dateFormat  YYYY-MM-DD
+  axisFormat  Week %W
+
+  section Discovery
+  Scope and architecture confirmation :a1, 2026-06-01, 14d
+
+  section Build
+  Mobile and backend MVP             :a2, after a1, 28d
+  Dashboard and notifications        :a3, after a1, 28d
+
+  section Reliability
+  Offline fallback and emergency routing :a4, after a2, 21d
+
+  section Validation
+  AI prompts, security, script validation :a5, after a4, 21d
+
+  section Launch
+  Pilot onboarding and controlled launch :a6, after a5, 28d
+          </pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>12. Phase 2 Implementation Plan</h2>
+        <p>Phase 2 should start after Phase 1 validates activation success, notification delivery, location quality, false alarm handling, support workload, dashboard usability, hosting readiness, and identity/access foundations.</p>
+        <div class="diagram">
+          <pre class="mermaid">
+flowchart TD
+  A["Phase 1 Foundations"] --> B["Flexible roles<br/>user, caregiver, admin"]
+  A --> C["Notification engine"]
+  A --> D["Location service"]
+  A --> E["Consent and access rules"]
+  A --> F["Audit and monitoring"]
+  A --> G["Localization pipeline"]
+
+  B --> H["Child + parent profiles"]
+  C --> I["School and family escalation"]
+  D --> J["Safe zones + geofencing"]
+  E --> K["Guardian permissions"]
+  F --> L["Scale dashboard"]
+  G --> M["10-language expansion"]
+
+  H --> N["Phase 2 Release"]
+  I --> N
+  J --> N
+  K --> N
+  L --> N
+  M --> N
+          </pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>13. Data Flow and Storage</h2>
+        <table>
+          <thead>
+            <tr><th>Data category</th><th>Example</th><th>Storage approach</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Identity data</td><td>User reference, caregiver reference</td><td>Encrypted database</td><td>Keep minimum necessary fields.</td></tr>
+            <tr><td>Emergency profile</td><td>Medical flags, allergies, language</td><td>Encrypted database and minimal encrypted device cache</td><td>Device cache only for emergency fallback.</td></tr>
+            <tr><td>Location data</td><td>Current/last known GPS, timestamp, accuracy</td><td>Event-linked storage</td><td>Share through short-lived links.</td></tr>
+            <tr><td>Emergency event</td><td>Activation source, status, timeline</td><td>Event database + audit log</td><td>Immutable audit trail for critical actions.</td></tr>
+            <tr><td>Voice/transcripts</td><td>Intent and confidence</td><td>Store only derived metadata by default</td><td>Raw audio should be avoided unless approved.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>14. Risks and Mitigation</h2>
+        <table>
+          <thead><tr><th>Risk</th><th>Impact</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Emergency API access is delayed</td><td>Pilot launch blocked if direct integration is mandatory</td><td>Build simulator/manual handoff path in parallel.</td></tr>
+            <tr><td>AI misunderstands distressed speech</td><td>Wrong context or delay</td><td>Button activation starts emergency flow regardless of AI confidence.</td></tr>
+            <tr><td>Weak GPS indoors</td><td>Incomplete location</td><td>Use GPS, network location, last known location, timestamp, and confidence.</td></tr>
+            <tr><td>Internet unavailable</td><td>Push/API path fails</td><td>Use local event creation, SMS fallback, receiver dashboard/manual handoff, and later sync.</td></tr>
+            <tr><td>Caregiver access misconfigured</td><td>Privacy and trust issue</td><td>Verify caregivers, use RBAC, short-lived links, and audit access.</td></tr>
+            <tr><td>Custom hosting required</td><td>Higher cost and timeline</td><td>Prepare separate infrastructure proposal if client rejects managed cloud.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>15. Immediate Client Decisions</h2>
+        <ol>
+          <li>Hosting preference: AWS UAE Region with Bedrock, dedicated on-premises infrastructure, or hybrid.</li>
+          <li>Onboarding preference: UAE Pass, mobile OTP, client SSO, or assisted/manual onboarding.</li>
+          <li>Emergency handoff model for Phase 1.</li>
+          <li>SMS payload approval for fallback alerts.</li>
+          <li>Receiver roles for Phase 1 alerts.</li>
+          <li>Approved hospital directory source.</li>
+          <li>Medication reminder scope for Phase 1.</li>
+          <li>Voice/audio retention policy.</li>
+          <li>Phase 2 priority order.</li>
+          <li>Any specific audit, security, data residency, or documentation requirements to be met.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>16. Final Recommendation</h2>
+        <p>Rahma should proceed with a disciplined Phase 1 pilot focused on emergency reliability, accessibility, location capture, caregiver/receiver alerting, medication reminders, auditability, and operational readiness.</p>
+        <p>The most favorable technical path is native iOS and Android apps, AWS UAE Region with Bedrock if approved, constrained on-device offline logic, SMS fallback, reusable backend services, and a receiver dashboard. This gives the client a realistic foundation while keeping Phase 2 expansion possible without rebuilding the platform.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#eef7f6",
+        primaryTextColor: "#17202a",
+        primaryBorderColor: "#0f766e",
+        lineColor: "#5f6b7a",
+        secondaryColor: "#fff7ed",
+        tertiaryColor: "#f6f8fb",
+        fontFamily: "Arial, Helvetica, sans-serif"
+      }
+    });
+  </script>
+</body>
+</html>
