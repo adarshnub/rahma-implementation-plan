@@ -973,11 +973,18 @@ main {
 }
 
 .plan-nav div,
-.plan-back {
+.plan-brand {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.plan-brand {
+  min-height: 40px;
+  color: var(--plan-teal-dark);
+  font-size: 14px;
+  font-weight: 900;
 }
 
 .plan-nav a {

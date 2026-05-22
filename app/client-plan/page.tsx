@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowLeft,
   BellRing,
   CheckCircle2,
   Cloud,
@@ -332,10 +330,7 @@ export default function ClientPlanPage() {
 
       <header className="plan-hero">
         <nav className="plan-nav" aria-label="Client plan navigation">
-          <Link href="/" className="plan-back">
-            <ArrowLeft size={17} />
-            Main website
-          </Link>
+          <span className="plan-brand">Rahma Client Plan</span>
           <div>
             <a href="#how">How it works</a>
             <a href="#architecture">Architecture</a>
@@ -1043,7 +1038,6 @@ export default function ClientPlanPage() {
           activation, alert delivery, location quality, false alarm management,
           support capacity, and the agreed hosting/requirement model.
         </p>
-        <Link href="/">Back to main Rahma website</Link>
       </section>
     </main>
   );
