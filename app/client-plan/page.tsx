@@ -47,13 +47,13 @@ const decisions = [
     topic: "Hosting",
     options: "AWS UAE Region + Bedrock, custom on-prem, hybrid",
     recommendation:
-      "AWS UAE Region + Bedrock unless the client mandates dedicated hosting. Exact model and feature availability should be confirmed during kickoff.",
+      "AWS UAE Region with a UAE-hosted foundation-model layer, preferably Bedrock where the required model is available; use UAE-hosted private models if dedicated hosting is mandated.",
   },
   {
     topic: "AI model usage",
-    options: "Managed private AI, self-hosted model, public AI API",
+    options: "UAE-hosted foundation model, UAE-hosted private model, self-hosted model",
     recommendation:
-      "Managed private AI in approved hosting. Public AI only for non-sensitive prototypes if formally approved.",
+      "Use a UAE-hosted foundation model for higher-quality Arabic/English understanding, such as Claude or an equivalent Bedrock model where available. Keep sensitive patient data inside approved UAE hosting.",
   },
   {
     topic: "Offline voice",
@@ -65,7 +65,7 @@ const decisions = [
     topic: "Emergency integration",
     options: "Direct approved API, gateway/call-center, simulator/manual pilot",
     recommendation:
-      "Use approved API if available; keep simulator/manual handoff ready so pilot is not blocked.",
+      "Use the client-confirmed authority/API route when available; keep dashboard, call-center, or manual handoff as approved operational fallback paths.",
   },
   {
     topic: "Onboarding",
@@ -311,8 +311,9 @@ const risks = [
 ];
 
 const clientDecisions = [
-  "Hosting preference: AWS UAE Region with Bedrock, dedicated on-premises infrastructure, or hybrid.",
+  "Hosting preference: AWS UAE Region with a UAE-hosted foundation-model layer, dedicated on-premises infrastructure, or hybrid.",
   "Onboarding preference: UAE Pass, mobile OTP, client SSO, or assisted/manual onboarding.",
+  "Patient information data access method linked to UAE Pass: approved API, secure client integration, controlled data feed, or manual pilot import.",
   "Emergency handoff model for Phase 1.",
   "SMS payload approval for fallback alerts.",
   "Receiver roles for Phase 1 alerts.",
@@ -360,8 +361,8 @@ export default function ClientPlanPage() {
             <span>Prepared: 22 May 2026</span>
             <strong>Recommended path</strong>
             <p>
-              Native iOS and Android apps, AWS UAE Region with Bedrock if
-              approved, constrained on-device fallback, SMS fallback,
+              Native iOS and Android apps, AWS UAE Region with a UAE-hosted
+              foundation-model layer, constrained on-device fallback, SMS fallback,
               reusable backend services, and a receiver dashboard.
             </p>
           </aside>
@@ -576,20 +577,6 @@ export default function ClientPlanPage() {
           </div>
         </div>
 
-        <div className="handoff-note">
-          <Siren size={24} />
-          <div>
-            <h3>Authority dispatch recommendation</h3>
-            <p>
-              For Phase 1, do not make launch dependent on a live authority API
-              unless that API is already approved and testable. Our recommended
-              method is to build the emergency event packet and receiver
-              dashboard first, support approved manual/call-center handoff or a
-              simulator during pilot validation, and switch to direct authority
-              dispatch once the client confirms the integration route.
-            </p>
-          </div>
-        </div>
       </section>
 
       <section className="plan-section onboarding-section">
@@ -844,7 +831,7 @@ export default function ClientPlanPage() {
   H --> I["Backend sends push alerts<br/>caregiver + receiver dashboard"]
   I --> J{"6. Approved authority route live?"}
   J -- "Yes" --> K["Send emergency packet<br/>through approved API/handoff route"]
-  J -- "No / pending" --> L["Receiver dashboard or call-center<br/>manual handoff/simulator"]
+  J -- "Fallback route" --> L["Receiver dashboard or call-center<br/>manual handoff/simulator"]
   G -- "No" --> M["Build SMS-safe payload<br/>user ref + emergency status + location text"]
   M --> N["Send SMS to approved caregivers<br/>and approved handoff number if configured"]
   N --> O["Show offline reassurance<br/>help is being contacted"]
@@ -946,7 +933,7 @@ export default function ClientPlanPage() {
       <section className="plan-section dark">
         <div className="plan-section-head">
           <p className="plan-eyebrow">Server architecture</p>
-          <h2>Preferred AWS UAE Region architecture if approved.</h2>
+          <h2>Recommended AWS UAE Region architecture with UAE-hosted AI.</h2>
         </div>
         <div className="diagram-shell">
           <pre className="mermaid">{`flowchart TB
@@ -954,7 +941,7 @@ export default function ClientPlanPage() {
   B --> C["Private VPC"]
   C --> D["Application services<br/>containers + serverless workers"]
   D --> E["Encrypted data services<br/>relational DB, cache, queues,<br/>object storage"]
-  D --> F["Managed AI layer<br/>Bedrock if approved and available"]
+  D --> F["UAE-hosted foundation-model layer<br/>Bedrock or approved private model"]
   E --> G["Key management<br/>secrets, encryption keys,<br/>backup controls"]
   D --> H["Monitoring and logs<br/>alerts, audit events,<br/>operational dashboards"]
 
@@ -971,7 +958,7 @@ export default function ClientPlanPage() {
             <span>Private VPC</span>
             <span>Application services: containers + serverless workers</span>
             <span>Encrypted data services: relational DB, cache, queues, object storage</span>
-            <span>Managed AI layer: Bedrock if approved and available</span>
+            <span>UAE-hosted foundation-model layer: Bedrock or approved private model</span>
             <span>Key management, secrets, backups, monitoring, logs, and audit events</span>
           </div>
         </div>

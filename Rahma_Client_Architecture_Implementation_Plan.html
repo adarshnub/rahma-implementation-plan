@@ -257,7 +257,7 @@
         <p>Rahma is planned as a one-touch emergency and care-assistance platform for vulnerable users. Phase 1 should prove the emergency-care foundation for elderly and special-care users. Phase 2 should expand the platform into children, geofencing, pharmacy communication, broader language support, and selected wearable integration.</p>
         <div class="summary-grid">
           <div class="summary-item"><strong>Recommended build model</strong>Native iOS and Android apps, reusable backend services, receiver dashboard, and client-approved UAE-hosted infrastructure.</div>
-          <div class="summary-item"><strong>Recommended hosting</strong>AWS UAE Region with Bedrock if accepted by the client. Custom on-premises hosting should be treated as a separate proposal.</div>
+          <div class="summary-item"><strong>Recommended hosting</strong>AWS UAE Region with a UAE-hosted foundation-model layer. Custom on-premises hosting should be treated as a separate proposal.</div>
           <div class="summary-item"><strong>Recommended AI posture</strong>AI supports language and intent context. The one-touch activation itself starts the safety workflow.</div>
         </div>
         <div class="callout">
@@ -435,7 +435,7 @@ flowchart TB
           <li><strong>Track and close:</strong> Receivers acknowledge, escalate, mark false alarm, or close the event. Every action is audited.</li>
         </ol>
         <div class="callout">
-          Recommended authority dispatch position: do not make Phase 1 launch dependent on live authority dispatch unless the integration is already approved, documented, and testable. Build the emergency packet and receiver dashboard first, support manual/call-center handoff or simulator during pilot validation, then switch to direct authority dispatch once the client confirms the approved route.
+          Recommended authority dispatch position: use the client-confirmed authority or emergency API route wherever it is available. Build the emergency packet, receiver dashboard, and audit trail as the shared foundation for every handoff route, while keeping approved dashboard, call-center, manual handoff, or simulator options as operational fallback paths during pilot validation.
         </div>
       </section>
 
@@ -491,7 +491,7 @@ flowchart TD
   H --> I["Backend sends caregiver push/SMS and receiver dashboard alert"]
   I --> J{"Approved authority route live?"}
   J -- "Yes" --> K["Send emergency packet through approved API/handoff route"]
-  J -- "No / pending" --> L["Use receiver dashboard, call-center manual handoff, or simulator"]
+  J -- "Fallback route" --> L["Use receiver dashboard, call-center manual handoff, or simulator"]
   G -- "No" --> M["Build SMS-safe payload: user ref, emergency status, location text"]
   M --> N["Send SMS to approved caregivers and approved handoff number if configured"]
   N --> O["Show offline reassurance: help is being contacted"]
@@ -539,8 +539,8 @@ flowchart LR
 
       <section>
         <h2>9. Recommended Server Architecture</h2>
-        <h3>Preferred Option: AWS UAE Region with Bedrock</h3>
-        <p>This is the recommended option from our side if accepted by the client. It is faster for Phase 1, easier to operate, and better suited for scaling into Phase 2 than building a custom GPU environment from day one. Exact model and feature availability should be confirmed in the selected region during kickoff.</p>
+        <h3>Preferred Option: AWS UAE Region with UAE-Hosted Foundation Model</h3>
+        <p>This is the recommended option from our side for the Phase 1 pilot. It is faster for Phase 1, easier to operate, and better suited for scaling into Phase 2 than building a custom GPU environment from day one. A UAE-hosted foundation model can support higher-quality Arabic/English understanding while keeping sensitive patient data inside the approved hosting boundary.</p>
         <div class="diagram">
           <pre class="mermaid">
 flowchart TB
@@ -556,7 +556,7 @@ flowchart TB
     S3["Encrypted Object Storage"]
     KMS["Key Management"]
     CW["Monitoring / Logs"]
-    Bedrock["Bedrock / Managed AI"]
+    Bedrock["UAE-hosted Foundation Model<br/>Bedrock or Private Model"]
   end
 
   Mobile["iOS / Android Apps"] --> WAF
@@ -594,10 +594,10 @@ flowchart TB
           </thead>
           <tbody>
             <tr><td>Mobile technology</td><td>Native iOS/Android, Flutter, React Native</td><td>Native iOS and Android for stronger device, location, SMS, background, and wearable control.</td></tr>
-            <tr><td>Hosting</td><td>AWS UAE Region + Bedrock, custom on-prem, hybrid</td><td>AWS UAE Region + Bedrock unless the client mandates dedicated hosting.</td></tr>
-            <tr><td>AI model usage</td><td>Managed private AI, self-hosted model, public AI API</td><td>Managed private AI in approved hosting. Public AI only for non-sensitive prototypes if formally approved.</td></tr>
+            <tr><td>Hosting</td><td>AWS UAE Region + UAE-hosted foundation model, custom on-prem, hybrid</td><td>AWS UAE Region with a UAE-hosted foundation-model layer unless the client mandates dedicated hosting.</td></tr>
+            <tr><td>AI model usage</td><td>UAE-hosted foundation model, UAE-hosted private model, self-hosted model</td><td>Use a UAE-hosted foundation model for higher-quality Arabic/English understanding, such as Claude or an equivalent Bedrock model where available. Keep sensitive patient data inside approved UAE hosting.</td></tr>
             <tr><td>Offline voice</td><td>Lightweight on-device model, rules-only prompts, full offline AI triage</td><td>Lightweight on-device model for simple commands and yes/no; no full offline medical triage in Phase 1.</td></tr>
-            <tr><td>Emergency integration</td><td>Direct approved API, gateway/call-center, simulator/manual pilot</td><td>Use approved API if available; keep simulator/manual handoff ready so pilot is not blocked.</td></tr>
+            <tr><td>Emergency integration</td><td>Direct approved API, gateway/call-center, simulator/manual pilot</td><td>Use the client-confirmed authority/API route where available; keep dashboard, call-center, or manual handoff as approved fallback paths.</td></tr>
             <tr><td>Onboarding</td><td>UAE Pass, mobile OTP, client SSO, assisted onboarding</td><td>UAE Pass if client confirms access; OTP/assisted verification as fallback.</td></tr>
             <tr><td>Medication reminders</td><td>App reminders, caregiver escalation, pharmacy-connected reminders</td><td>Phase 1 app reminders with optional caregiver escalation; Phase 2 pharmacy connection.</td></tr>
             <tr><td>Wearables</td><td>Defer, Phase 2 proof, full launch support</td><td>Phase 2 controlled proof after selected devices and APIs are confirmed.</td></tr>
@@ -710,8 +710,9 @@ flowchart TD
       <section>
         <h2>15. Immediate Client Decisions</h2>
         <ol>
-          <li>Hosting preference: AWS UAE Region with Bedrock, dedicated on-premises infrastructure, or hybrid.</li>
+          <li>Hosting preference: AWS UAE Region with a UAE-hosted foundation-model layer, dedicated on-premises infrastructure, or hybrid.</li>
           <li>Onboarding preference: UAE Pass, mobile OTP, client SSO, or assisted/manual onboarding.</li>
+          <li>Patient information data access method linked to UAE Pass: approved API, secure client integration, controlled data feed, or manual pilot import.</li>
           <li>Emergency handoff model for Phase 1.</li>
           <li>SMS payload approval for fallback alerts.</li>
           <li>Receiver roles for Phase 1 alerts.</li>
@@ -726,7 +727,7 @@ flowchart TD
       <section>
         <h2>16. Final Recommendation</h2>
         <p>Rahma should proceed with a disciplined Phase 1 pilot focused on emergency reliability, accessibility, location capture, caregiver/receiver alerting, medication reminders, auditability, and operational readiness.</p>
-        <p>The most favorable technical path is native iOS and Android apps, AWS UAE Region with Bedrock if approved, constrained on-device offline logic, SMS fallback, reusable backend services, and a receiver dashboard. This gives the client a realistic foundation while keeping Phase 2 expansion possible without rebuilding the platform.</p>
+        <p>The most favorable technical path is native iOS and Android apps, AWS UAE Region with a UAE-hosted foundation-model layer, constrained on-device offline logic, SMS fallback, reusable backend services, and a receiver dashboard. This gives the client a realistic foundation while keeping Phase 2 expansion possible without rebuilding the platform.</p>
       </section>
     </main>
   </div>
