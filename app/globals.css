@@ -1089,6 +1089,68 @@ main {
   font-size: 16px;
 }
 
+.ant-hero {
+  padding-bottom: 66px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(232, 245, 243, 0.9) 52%, rgba(255, 247, 237, 0.84)),
+    repeating-linear-gradient(45deg, rgba(15, 118, 110, 0.07) 0 1px, transparent 1px 18px);
+}
+
+.ant-nav-brand {
+  min-width: 150px;
+  justify-content: center;
+  padding: 9px 12px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 118, 110, 0.16);
+}
+
+.ant-nav-brand img {
+  display: block;
+  width: 96px;
+  height: auto;
+}
+
+.ant-hero .plan-hero-grid {
+  align-items: center;
+}
+
+.ant-hero h1 {
+  max-width: 920px;
+  margin-bottom: 22px;
+}
+
+.ant-hero h1 span {
+  display: block;
+}
+
+.ant-venture-logo-mark {
+  width: fit-content;
+  margin-bottom: 14px;
+  padding: 16px 18px 18px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 118, 110, 0.16);
+  box-shadow: 12px 12px 0 #f59e0b;
+}
+
+.ant-venture-logo-mark img {
+  display: block;
+  width: min(430px, 74vw);
+  height: auto;
+}
+
+.ant-hero h1 span:not(.ant-venture-logo-mark) {
+  font-size: 44px;
+  color: var(--plan-ink);
+  line-height: 1.05;
+}
+
+.ant-hero .plan-summary {
+  min-height: 390px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(232, 245, 243, 0.82)),
+    #ffffff;
+}
+
 .plan-section {
   padding: 76px 18px;
   background: var(--plan-paper);
@@ -1202,6 +1264,16 @@ main {
     radial-gradient(circle at 12% 20%, rgba(15, 118, 110, 0.1), transparent 24%),
     radial-gradient(circle at 88% 76%, rgba(180, 83, 9, 0.12), transparent 25%),
     #ffffff;
+}
+
+.about-section {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(232, 245, 243, 0.84) 58%, rgba(255, 247, 237, 0.72)),
+    #ffffff;
+}
+
+.about-card-grid article {
+  min-height: 240px;
 }
 
 .onboarding-section {
@@ -2262,6 +2334,79 @@ main {
   line-height: 1.7;
 }
 
+.site-footer {
+  padding: 42px 18px;
+  background: #111827;
+  color: rgba(255, 255, 255, 0.78);
+  border-top: 6px solid var(--plan-gold);
+}
+
+.footer-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 1.15fr) repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  align-items: start;
+}
+
+.site-footer section {
+  display: grid;
+  gap: 8px;
+}
+
+.site-footer span {
+  color: #f59e0b;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.footer-logo {
+  width: fit-content;
+  padding: 9px 11px 10px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.footer-logo img {
+  display: block;
+  width: 132px;
+  height: auto;
+}
+
+.site-footer strong {
+  color: #ffffff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  line-height: 1.12;
+}
+
+.site-footer p,
+.site-footer a {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.5;
+}
+
+.site-footer a {
+  width: fit-content;
+  color: #ffffff;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.footer-brand-block p {
+  max-width: 330px;
+}
+
+.footer-confidential {
+  color: #f59e0b !important;
+  font-weight: 900;
+}
+
 @media (max-width: 1100px) {
   .hero-grid,
   .intro-grid,
@@ -2310,6 +2455,10 @@ main {
     grid-template-columns: 1fr;
   }
 
+  .ant-venture-logo-mark img {
+    width: min(390px, 82vw);
+  }
+
   .plan-section-head .plan-eyebrow,
   .plan-section-head h2,
   .plan-section-head p:not(.plan-eyebrow) {
@@ -2319,6 +2468,7 @@ main {
   .phase-path,
   .plan-card-grid,
   .plan-card-grid.three,
+  .footer-grid,
   .onboarding-layout,
   .flow-explainer,
   .how-grid,
@@ -2441,6 +2591,19 @@ main {
     font-size: 38px;
   }
 
+  .ant-venture-logo-mark {
+    padding: 8px 10px 10px;
+    box-shadow: 7px 7px 0 #f59e0b;
+  }
+
+  .ant-venture-logo-mark img {
+    width: min(280px, 78vw);
+  }
+
+  .ant-hero h1 span:not(.ant-venture-logo-mark) {
+    font-size: 30px;
+  }
+
   .plan-section {
     padding: 56px 14px;
   }
@@ -2461,6 +2624,7 @@ main {
   .stack-card-grid.four,
   .provider-panel,
   .risk-panel,
+  .footer-grid,
   .client-decision-list {
     grid-template-columns: 1fr;
   }
@@ -2540,6 +2704,7 @@ main {
   .provider-panel,
   .plan-card-grid,
   .plan-card-grid.three,
+  .footer-grid,
   .flow-explainer,
   .how-step-list,
   .how-grid,

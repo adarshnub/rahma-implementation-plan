@@ -7,8 +7,6 @@ import {
   Code2,
   Cpu,
   Database,
-  FileCheck2,
-  FileText,
   Globe2,
   Hospital,
   Languages,
@@ -329,10 +327,14 @@ export default function ClientPlanPage() {
     <main className="client-plan">
       <MermaidRenderer />
 
-      <header className="plan-hero">
+      <header className="plan-hero ant-hero" id="about">
         <nav className="plan-nav" aria-label="Client plan navigation">
-          <span className="plan-brand">Rahma Client Plan</span>
+          <span className="plan-brand ant-nav-brand">
+            <img src="/ant-venture-logo.png" alt="Ant Venture" />
+          </span>
           <div>
+            <a href="#about">About</a>
+            <a href="#plan">Rahma plan</a>
             <a href="#how">How it works</a>
             <a href="#architecture">Architecture</a>
             <a href="#flows">Flows</a>
@@ -344,34 +346,42 @@ export default function ClientPlanPage() {
 
         <div className="plan-hero-grid">
           <section>
-            <p className="plan-eyebrow">Client review document</p>
-            <h1>Rahma AI Guardian App Architecture and Implementation Plan</h1>
+            <p className="plan-eyebrow">AI-powered business growth solutions</p>
+            <h1>
+              <span className="ant-venture-logo-mark">
+                <img src="/ant-venture-logo.png" alt="Ant Venture" />
+              </span>
+              <span>Enterprise Growth Intelligence</span>
+            </h1>
             <p>
-              A detailed Phase 1 and Phase 2 plan covering system architecture,
-              emergency flows, offline fallback, server architecture, open
-              technical options, recommended decisions, and launch readiness.
+              Ant Venture is an enterprise-grade growth intelligence company
+              headquartered in Dubai, UAE, with global operations spanning the
+              US, UK, and India. We deploy configurable AI Growth Brain systems
+              through an Agent-as-a-Service model to accelerate revenue,
+              improve efficiency, and reduce the cost of growth.
             </p>
             <div className="plan-actions">
-              <a href="#architecture">View architecture</a>
+              <a href="#plan">View Rahma plan</a>
               <a href="/Rahma_Client_Architecture_Implementation_Plan.pdf">Open PDF</a>
             </div>
           </section>
 
           <aside className="plan-summary">
-            <span>Prepared: 22 May 2026</span>
-            <strong>Recommended path</strong>
+            <span>Growth Brain deployment</span>
+            <strong>Modular AI agents across the full growth lifecycle</strong>
             <p>
-              Native iOS and Android apps, AWS UAE Region with a UAE-hosted
-              foundation-model layer, constrained on-device fallback, SMS fallback,
-              reusable backend services, and a receiver dashboard.
+              Omni-channel lead intelligence, workforce performance
+              intelligence, brand positioning insights, internal training
+              intelligence, and autonomous business networking unified in one
+              continuously learning system.
             </p>
           </aside>
         </div>
       </header>
 
-      <section className="plan-section">
+      <section className="plan-section about-section" id="plan">
         <div className="plan-section-head">
-          <p className="plan-eyebrow">Executive recommendation</p>
+          <p className="plan-eyebrow">Rahma client plan</p>
           <h2>Build Phase 1 as a controlled emergency-care pilot first.</h2>
           <p>
             Rahma should first prove one reliable path: activate, locate,
@@ -381,21 +391,21 @@ export default function ClientPlanPage() {
           </p>
         </div>
 
-        <div className="plan-card-grid three">
+        <div className="plan-card-grid three about-card-grid">
           <article>
             <Smartphone size={24} />
             <h3>Native Mobile</h3>
             <p>
-              Better control over permissions, background location, SMS fallback,
-              haptics, voice, and future wearables.
+              Better control over permissions, background location, SMS
+              fallback, haptics, voice, and future wearables.
             </p>
           </article>
           <article>
             <Cloud size={24} />
             <h3>Client-Approved Hosting</h3>
             <p>
-              Production data, logs, backups, and keys stay inside the approved
-              hosting boundary unless formally approved otherwise.
+              Production data, logs, backups, and keys stay inside the
+              approved hosting boundary unless formally approved otherwise.
             </p>
           </article>
           <article>
@@ -1014,18 +1024,38 @@ export default function ClientPlanPage() {
         </ol>
       </section>
 
-      <section className="plan-close">
-        <FileCheck2 size={30} />
-        <h2>Final recommendation</h2>
-        <p>
-          Proceed with a disciplined Phase 1 pilot focused on emergency
-          reliability, accessibility, location capture, caregiver/receiver
-          alerting, medication reminders, auditability, and operational
-          readiness. Approve Phase 2 after Phase 1 validates real-world
-          activation, alert delivery, location quality, false alarm management,
-          support capacity, and the agreed hosting/requirement model.
-        </p>
-      </section>
+      <footer className="site-footer" aria-label="Ant Venture footer">
+        <div className="footer-grid">
+          <section className="footer-brand-block">
+            <span className="footer-logo">
+              <img src="/ant-venture-logo.png" alt="Ant Venture" />
+            </span>
+            <p>AI-Powered Business Growth Solutions</p>
+            <p className="footer-confidential">Confidential - Prepared May 2025</p>
+          </section>
+
+          <section>
+            <span>Company</span>
+            <p>Headquarters: Dubai, UAE</p>
+            <p>Global: US, UK, India</p>
+            <a href="https://www.antventure.ai">www.antventure.ai</a>
+          </section>
+
+          <section>
+            <span>Point of Contact</span>
+            <strong>Merlin James</strong>
+            <p>CEO &amp; Founder</p>
+            <a href="mailto:info@antventure.ai">info@antventure.ai</a>
+            <a href="tel:+971562903901">+971 562903901</a>
+          </section>
+
+          <section>
+            <span>Document</span>
+            <p>This document is confidential and intended for client review.</p>
+            <p>(c) 2026 Ant Venture. All rights reserved.</p>
+          </section>
+        </div>
+      </footer>
     </main>
   );
 }
